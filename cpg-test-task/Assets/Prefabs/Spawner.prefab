@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6987168188203284730}
   m_Layer: 0
   m_Name: Spawner
-  m_TagString: Untagged
+  m_TagString: Spawner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,6 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3547f326212438ebfe7851168a7c06c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  colliderTag: Spawner
 --- !u!61 &6987168188203284730
 BoxCollider2D:
   m_ObjectHideFlags: 0

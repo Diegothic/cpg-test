@@ -1,6 +1,7 @@
 ﻿using System;
 using Framework;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Controls
 {
@@ -29,18 +30,26 @@ namespace Controls
 
         private void Update()
         {
-            if (Input.GetMouseButton(0))
-            {
-                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                var mouseDelta = mousePos - lastMousePos;
-                transform.position = new Vector3(
-                    transform.position.x - mouseDelta.x,
-                    transform.position.y - mouseDelta.y,
-                    transform.position.z
-                );
-            }
-
+            if (Input.GetMouseButton(0) && !IsMouseOverUI())
+                PanView();
             lastMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        }
+
+        private bool IsMouseOverUI()
+        {
+            return EventSystem.current.IsPointerOverGameObject();
+        }
+
+        private void PanView()
+        {
+            Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var mouseDelta = mousePos - lastMousePos;
+            transform.position = new Vector3(
+                transform.position.x - mouseDelta.x,
+                transform.position.y - mouseDelta.y,
+                transform.position.z
+            );
+            lastMousePos = mousePos;
         }
 
         public void SetZoomLevel(float amount)
