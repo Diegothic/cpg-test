@@ -11,7 +11,7 @@ namespace Game
         public override void Setup(GridGame grid, Vector2Int gridPosition)
         {
             base.Setup(grid, gridPosition);
-            transform.position = GetGrid().GetWorldPosition(GetGridPosition());
+            transform.position = GetGrid().GridToWorldPosition(GetGridPosition());
         }
 
         public void SpawnItem()
@@ -27,8 +27,13 @@ namespace Game
                     position.z + 0.05f
                 );
                 var newItem = Instantiate(spawnedItem, newItemPosition, transform.rotation);
-                GetGrid().GetCell(nearestEmptyCell).SetItem(newItem.GetComponent<Item>());
+                GetGrid().CellAt(nearestEmptyCell).SetItem(newItem.GetComponent<Item>());
             }
+        }
+
+        public override bool IsAdjacent()
+        {
+            return false;
         }
     }
 }

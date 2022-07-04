@@ -11,11 +11,12 @@ namespace Controls
 
         private Camera _camera;
 
-        private float _baseZoom = 5.0f;
+        [SerializeField]
+        private float baseZoom = 5.0f;
         private float _zoomLevel;
         private float _zoomMultiplier;
 
-        private Vector2 lastMousePos;
+        private Vector2 _lastMousePos;
 
         private void Start()
         {
@@ -23,16 +24,16 @@ namespace Controls
             var gridConfig = config.GetConfig().grid;
             var gridSize = Math.Max(gridConfig.width, gridConfig.height);
             _zoomMultiplier = gridSize / 2.0f;
-            _camera.orthographicSize = _baseZoom;
+            _camera.orthographicSize = baseZoom;
 
-            lastMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            _lastMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 
         private void Update()
         {
             if (Input.GetMouseButton(0) && !IsMouseOverUI())
                 PanView();
-            lastMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            _lastMousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
 
         private bool IsMouseOverUI()
@@ -43,19 +44,19 @@ namespace Controls
         private void PanView()
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            var mouseDelta = mousePos - lastMousePos;
+            var mouseDelta = mousePos - _lastMousePos;
             transform.position = new Vector3(
                 transform.position.x - mouseDelta.x,
                 transform.position.y - mouseDelta.y,
                 transform.position.z
             );
-            lastMousePos = mousePos;
+            _lastMousePos = mousePos;
         }
 
         public void SetZoomLevel(float amount)
         {
             _zoomLevel = Math.Clamp(amount, 0.0f, 1.0f);
-            _camera.orthographicSize = (_zoomLevel * _zoomMultiplier) + _baseZoom;
+            _camera.orthographicSize = (_zoomLevel * _zoomMultiplier) + baseZoom;
         }
     }
 }

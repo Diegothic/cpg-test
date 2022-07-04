@@ -14,15 +14,15 @@ namespace Game
         private bool _animating = true;
         private Vector2 _desiredPosition;
 
-        [HideInInspector]
-        public bool isAdjacent = false;
+        private bool _isAdjacent;
 
         public override void Setup(GridGame grid, Vector2Int gridPosition)
         {
             base.Setup(grid, gridPosition);
-            _desiredPosition = GetGrid().GetWorldPosition(GetGridPosition());
+            _desiredPosition = GetGrid().GridToWorldPosition(GetGridPosition());
             GetComponent<SpriteRenderer>().color = type.color;
 
+            _isAdjacent = false;
             CheckNeighbour(Direction.Up);
             CheckNeighbour(Direction.Right);
             CheckNeighbour(Direction.Down);
@@ -35,21 +35,29 @@ namespace Game
             if (!GetGrid().IsInBounds(checkedPosition))
                 return;
 
-            var neighbour = GetGrid().GetCell(checkedPosition).GetItem() as Item;
+            var neighbour = GetGrid().CellAt(checkedPosition).GetItem() as Item;
             if (neighbour != null && IsTheSameType(neighbour))
             {
-                isAdjacent = true;
-                neighbour.isAdjacent = true;
+                _isAdjacent = true;
+                neighbour._isAdjacent = true;
             }
         }
 
         public void Update()
         {
             if (_animating)
-            {
-                Vector2 newPosition = GetAnimatedPosition();
-                transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
-            }
+                Animate();
+        }
+
+        private void Animate()
+        {
+            Vector2 newPosition = GetAnimatedPosition();
+            transform.position = new Vector3(newPosition.x, newPosition.y, transform.position.z);
+        }
+
+        public override bool IsAdjacent()
+        {
+            return _isAdjacent;
         }
 
         private Vector2 GetAnimatedPosition()

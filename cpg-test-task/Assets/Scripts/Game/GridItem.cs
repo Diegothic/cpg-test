@@ -2,17 +2,15 @@
 
 namespace Game
 {
-    public class GridItem : MonoBehaviour
+    public abstract class GridItem : MonoBehaviour
     {
         private GridGame _grid;
         private Vector2Int _gridPosition;
-        private Cell _cell;
 
         public virtual void Setup(GridGame grid, Vector2Int gridPosition)
         {
             _grid = grid;
             _gridPosition = gridPosition;
-            _cell = _grid.GetCell(gridPosition);
         }
 
         public GridGame GetGrid()
@@ -25,9 +23,6 @@ namespace Game
             return _gridPosition;
         }
 
-        public Cell GetCell()
-        {
-            return _cell;
-        }
+        public abstract bool IsAdjacent();
     }
 }

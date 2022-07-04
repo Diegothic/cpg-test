@@ -71,12 +71,12 @@ namespace Game
             return _height;
         }
 
-        public Vector2 GetWorldPosition(Vector2Int gridPosition)
+        public Vector2 GridToWorldPosition(Vector2Int gridPosition)
         {
             return _startingCellPosition + gridPosition + new Vector2(cellSize / 2.0f, cellSize / 2.0f);
         }
 
-        public Vector2Int GetGridPosition(Vector2 worldPosition)
+        public Vector2Int WorldToGridPosition(Vector2 worldPosition)
         {
             return new Vector2Int(
                 Mathf.FloorToInt(worldPosition.x + _width / 2.0f),
@@ -84,7 +84,7 @@ namespace Game
             );
         }
 
-        public Cell GetCell(Vector2Int gridPosition)
+        public Cell CellAt(Vector2Int gridPosition)
         {
             return _cells[gridPosition.x, gridPosition.y];
         }
@@ -104,12 +104,9 @@ namespace Game
         {
             foreach (var cell in _cells)
             {
-                var item = cell.GetItem() as Item;
-                if (item != null && item.isAdjacent)
-                {
-                    cell.SetItem(null);
-                    Destroy(item.gameObject);
-                }
+                var item = cell.GetItem();
+                if (item != null && item.IsAdjacent())
+                    cell.Clear();
             }
         }
 
@@ -120,13 +117,13 @@ namespace Game
 
         public Vector2Int FindNearestEmptyCell(Vector2Int gridPosition)
         {
-            if (IsInBounds(gridPosition) && GetCell(gridPosition).IsEmpty())
+            if (IsInBounds(gridPosition) && CellAt(gridPosition).IsEmpty())
                 return gridPosition;
 
-            while (_iterator.CurrentCircle < Math.Max(_width, _height))
+            while (_iterator.GetCurrentCircle() < Math.Max(_width, _height))
             {
-                var lookupPos = _iterator.CurrentPosition + gridPosition;
-                if (IsInBounds(lookupPos) && GetCell(lookupPos).IsEmpty())
+                var lookupPos = _iterator.GetCurrentPosition() + gridPosition;
+                if (IsInBounds(lookupPos) && CellAt(lookupPos).IsEmpty())
                     return lookupPos;
                 _iterator.Next();
             }
@@ -144,20 +141,31 @@ namespace Game
 
         private void SetupCells()
         {
-            var centerCell = GetGridPosition(Vector2.zero);
+            var centerCellPosition = WorldToGridPosition(Vector2.zero);
             var gridPosition = new Vector2Int();
             for (var y = 0; y < _height; ++y)
             {
                 for (var x = 0; x < _width; ++x)
                 {
-                    var createdCell = Instantiate(cellPrefab);
                     gridPosition.Set(x, y);
-                    _cells[x, y] = createdCell.GetComponent<Cell>();
-                    var blocked = gridPosition != centerCell && ShouldBeBlocked();
-                    var color = CreateCellColor(gridPosition, blocked);
-                    _cells[x, y].Setup(this, gridPosition, color, blocked);
+                    CreateCell(gridPosition);
+                    var isCenterCell = gridPosition == centerCellPosition;
+                    SetupCell(gridPosition, isCenterCell);
                 }
             }
+        }
+
+        private void CreateCell(Vector2Int gridPosition)
+        {
+            var createdCell = Instantiate(cellPrefab);
+            _cells[gridPosition.x, gridPosition.y] = createdCell.GetComponent<Cell>();
+        }
+
+        private void SetupCell(Vector2Int gridPosition, bool isCenterCell)
+        {
+            var blocked = !isCenterCell && ShouldBeBlocked();
+            var color = CreateCellColor(gridPosition, blocked);
+            _cells[gridPosition.x, gridPosition.y].Setup(this, gridPosition, color, blocked);
         }
 
         private bool ShouldBeBlocked()
@@ -181,7 +189,7 @@ namespace Game
         {
             var spawner = Instantiate(spawnerPrefab);
             _spawner = spawner.GetComponent<Spawner>();
-            GetCell(GetGridPosition(Vector2.zero)).SetItem(_spawner);
+            CellAt(WorldToGridPosition(Vector2.zero)).SetItem(_spawner);
         }
     }
 }

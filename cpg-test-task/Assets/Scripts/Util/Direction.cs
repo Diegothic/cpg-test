@@ -21,7 +21,7 @@ namespace Util
             return _forward;
         }
 
-        public Direction NextClockWise()
+        public Direction NextClockwise()
         {
             if (_forward == Up._forward)
                 return Right;
