@@ -159,7 +159,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.6603774, g: 0.6603774, b: 0.6603774, a: 0}
+  m_BackGroundColor: {r: 0.4339623, g: 0.4339623, b: 0.4339623, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -217,6 +217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 838278583}
   - component: {fileID: 838278582}
+  - component: {fileID: 838278584}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -252,3 +253,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &838278584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 838278581}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a28b4b6c76584efc8c018119f897102f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellPrefab: {fileID: 4612680950017038878, guid: 2b9373956d520fc4e8a6e12cb9c13bc1, type: 3}
+  evenCellColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
+  oddCellColor: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 1}
