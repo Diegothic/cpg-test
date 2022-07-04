@@ -12,6 +12,12 @@ namespace Game
         private Color evenCellColor;
         [SerializeField]
         private Color oddCellColor;
+        [SerializeField]
+        private Color blockedCellColor;
+
+        [SerializeField]
+        [Range(0.0f, 1.0f)]
+        private float blockedChance = 0.25f;
 
         private int _width;
         private int _height;
@@ -65,10 +71,23 @@ namespace Game
                     var createdCell = Instantiate(cellPrefab);
                     gridPosition.Set(x, y);
                     _cells[x, y] = createdCell.GetComponent<Cell>();
-                    var color = IsEvenCell(gridPosition) ? evenCellColor : oddCellColor;
-                    _cells[x, y].Setup(this, gridPosition, color);
+                    var blocked = ShouldBeBlocked();
+                    var color = CreateCellColor(gridPosition, blocked);
+                    _cells[x, y].Setup(this, gridPosition, color, blocked);
                 }
             }
+        }
+
+        private bool ShouldBeBlocked()
+        {
+            return Random.Range(float.Epsilon, 1.0f) <= blockedChance;
+        }
+
+        private Color CreateCellColor(Vector2Int gridPosition, bool blocked)
+        {
+            if (blocked)
+                return blockedCellColor;
+            return IsEvenCell(gridPosition) ? evenCellColor : oddCellColor;
         }
 
         private bool IsEvenCell(Vector2Int gridPosition)

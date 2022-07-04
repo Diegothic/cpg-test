@@ -268,3 +268,5 @@ MonoBehaviour:
   cellPrefab: {fileID: 4612680950017038878, guid: 2b9373956d520fc4e8a6e12cb9c13bc1, type: 3}
   evenCellColor: {r: 0.8584906, g: 0.8584906, b: 0.8584906, a: 1}
   oddCellColor: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 1}
+  blockedCellColor: {r: 0.122641504, g: 0.122641504, b: 0.122641504, a: 1}
+  blockedChance: 0.25
