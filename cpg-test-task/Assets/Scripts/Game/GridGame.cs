@@ -123,9 +123,9 @@ namespace Game
             if (IsInBounds(gridPosition) && GetCell(gridPosition).IsEmpty())
                 return gridPosition;
 
-            while (_iterator.currentCircle < Math.Max(_width, _height))
+            while (_iterator.CurrentCircle < Math.Max(_width, _height))
             {
-                var lookupPos = _iterator.currentPositon + gridPosition;
+                var lookupPos = _iterator.CurrentPosition + gridPosition;
                 if (IsInBounds(lookupPos) && GetCell(lookupPos).IsEmpty())
                     return lookupPos;
                 _iterator.Next();
