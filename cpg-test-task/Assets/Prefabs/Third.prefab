@@ -98,4 +98,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: {fileID: 11400000, guid: 9f56c36ad7d249f489a86c0445b52b4b, type: 2}
-  lerpSpeed: 10
+  lerpSpeed: 5

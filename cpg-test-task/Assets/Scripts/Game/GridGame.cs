@@ -6,7 +6,7 @@ using Random = UnityEngine.Random;
 
 namespace Game
 {
-    public class GameGrid : MonoBehaviour
+    public class GridGame : MonoBehaviour
     {
         [SerializeField]
         private float cellSize = 1.0f;
@@ -34,6 +34,11 @@ namespace Game
 
         private Cell[,] _cells;
 
+        private Spawner _spawner;
+        private bool _spawning;
+
+        private ClockwiseGridIterator _iterator;
+
         private void Start()
         {
             var config = GetComponent<ConfigManager>().GetConfig();
@@ -47,6 +52,13 @@ namespace Game
 
             SetupCells();
             SetupSpawner();
+            ResetIterator();
+        }
+
+        private void Update()
+        {
+            if (_spawning)
+                _spawner.SpawnItem();
         }
 
         public int GetWidth()
@@ -77,40 +89,46 @@ namespace Game
             return _cells[gridPosition.x, gridPosition.y];
         }
 
+        public void StartSpawning()
+        {
+            _spawning = true;
+        }
+
+        public void StopSpawning()
+        {
+            _spawning = false;
+            ResetIterator();
+        }
+
+        public void ClearAdjacent()
+        {
+            foreach (var cell in _cells)
+            {
+                var item = cell.GetItem() as Item;
+                if (item != null && item.isAdjacent)
+                {
+                    cell.SetItem(null);
+                    Destroy(item.gameObject);
+                }
+            }
+        }
+
+        public void ResetIterator()
+        {
+            _iterator = new ClockwiseGridIterator(new Vector2Int(0, 1), Direction.Right, 1);
+        }
+
         public Vector2Int FindNearestEmptyCell(Vector2Int gridPosition)
         {
             if (IsInBounds(gridPosition) && GetCell(gridPosition).IsEmpty())
                 return gridPosition;
 
-            var lookupDir = Direction.Right;
-            var lookupPos = gridPosition + new Vector2Int(0, 1);
-            var circle = 1;
-            var lastCirclePos = lookupPos - lookupDir.GetForward();
-            while (circle < Math.Max(_width, _height))
+            while (_iterator.currentCircle < Math.Max(_width, _height))
             {
+                var lookupPos = _iterator.currentPositon + gridPosition;
                 if (IsInBounds(lookupPos) && GetCell(lookupPos).IsEmpty())
                     return lookupPos;
-                if (lookupPos == lastCirclePos)
-                {
-                    ++circle;
-                    lookupDir = Direction.Right;
-                    lookupPos = gridPosition + new Vector2Int(0, circle);
-                    lastCirclePos = lookupPos - lookupDir.GetForward();
-                }
-                else
-                {
-                    var nextPos = lookupPos + lookupDir.GetForward();
-                    if (nextPos.x > gridPosition.x + circle
-                        || nextPos.x < gridPosition.x - circle
-                        || nextPos.y > gridPosition.y + circle
-                        || nextPos.y < gridPosition.y - circle)
-                    {
-                        lookupDir = lookupDir.GetNextClockWise();
-                        nextPos = lookupPos + lookupDir.GetForward();
-                    }
-
-                    lookupPos = nextPos;
-                }
+                _iterator.Next();
             }
 
             return gridPosition;
@@ -162,7 +180,8 @@ namespace Game
         private void SetupSpawner()
         {
             var spawner = Instantiate(spawnerPrefab);
-            GetCell(GetGridPosition(Vector2.zero)).SetItem(spawner.GetComponent<Spawner>());
+            _spawner = spawner.GetComponent<Spawner>();
+            GetCell(GetGridPosition(Vector2.zero)).SetItem(_spawner);
         }
     }
 }

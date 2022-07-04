@@ -16,12 +16,12 @@ namespace Util
             _forward = forward;
         }
 
-        public Vector2Int GetForward()
+        public Vector2Int Forward()
         {
             return _forward;
         }
 
-        public Direction GetNextClockWise()
+        public Direction NextClockWise()
         {
             if (_forward == Up._forward)
                 return Right;

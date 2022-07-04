@@ -35,6 +35,7 @@ namespace Controls
             gridPosition.x = Math.Clamp(gridPosition.x, 0, grid.GetWidth() - 1);
             gridPosition.y = Math.Clamp(gridPosition.y, 0, grid.GetHeight() - 1);
             var nearestEmpty = grid.FindNearestEmptyCell(gridPosition);
+            grid.ResetIterator();
             grid.GetCell(nearestEmpty).SetItem(_gridItem);
         }
 

@@ -8,7 +8,7 @@ namespace Game
         [SerializeField]
         private List<GameObject> spawnedItems;
 
-        public override void Setup(GameGrid grid, Vector2Int gridPosition)
+        public override void Setup(GridGame grid, Vector2Int gridPosition)
         {
             base.Setup(grid, gridPosition);
             transform.position = GetGrid().GetWorldPosition(GetGridPosition());
@@ -28,14 +28,6 @@ namespace Game
                 );
                 var newItem = Instantiate(spawnedItem, newItemPosition, transform.rotation);
                 GetGrid().GetCell(nearestEmptyCell).SetItem(newItem.GetComponent<Item>());
-            }
-        }
-
-        public void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                SpawnItem();
             }
         }
     }

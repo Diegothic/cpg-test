@@ -4,7 +4,7 @@ namespace Game
 {
     public class Cell : MonoBehaviour
     {
-        private GameGrid _grid;
+        private GridGame _grid;
 
         private Vector2Int _gridPosition;
         private Vector2 _worldPosition;
@@ -12,7 +12,7 @@ namespace Game
         private GridItem _item;
         private bool _isBlocked;
 
-        public void Setup(GameGrid grid, Vector2Int newGridPosition, Color color, bool isBlocked)
+        public void Setup(GridGame grid, Vector2Int newGridPosition, Color color, bool isBlocked)
         {
             _grid = grid;
             _gridPosition = newGridPosition;
@@ -32,6 +32,11 @@ namespace Game
         public Vector2 GetWorldPosition()
         {
             return _worldPosition;
+        }
+
+        public GridItem GetItem()
+        {
+            return _item;
         }
 
         public void SetItem(GridItem item)
